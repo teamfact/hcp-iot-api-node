@@ -1,0 +1,23 @@
+{
+  "name": "hcp-iot-services",
+  "version": "1.0.0",
+  "description": "Lightweight node.js based wrapper for the SAP HANA Cloud Platform IoT Services API.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/teamfact/hcp-iot-services-node.git"
+  },
+  "author": "Mike Zaschka (mike.zaschka@teamfact.com)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/teamfact/hcp-iot-services-node/issues"
+  },
+  "homepage": "https://github.com/teamfact/hcp-iot-services-node#readme",
+  "dependencies": {
+    "ws": "1.x",
+    "request-promise": "3.x"
+  }
+}
