@@ -16,9 +16,21 @@ var rdms = new API.RemoteDeviceManagementService("<user>", "<password>");
 
 ```js
 rdms.getMessageTypes()
-  .then(function(messageTypes) {
+	.then(function(messageTypes) {
 		// Do something meaningful
 	})
+	.catch(function(error) {
+		console.log(error.message)
+	});
+```
+
+## Posting data
+
+```js
+rdms.createDeviceType({ "name": "Device Type 1" })
+	.then(function (deviceType) {
+		// Store token for later usage
+		var deviceTypeToken = deviceType.token;
 	.catch(function(error) {
 		console.log(error.message)
 	});
