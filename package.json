@@ -18,6 +18,7 @@
   "homepage": "https://github.com/teamfact/hcp-iot-services-node#readme",
   "dependencies": {
     "ws": "1.x",
-    "request-promise": "3.x"
+    "request-promise": "3.x",
+    "bluebird": "3.x"
   }
 }
