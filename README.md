@@ -37,3 +37,17 @@ rdms.createDeviceType({ "name": "Device Type 1" })
 ```
 
 # Message Management Service (MMS)
+
+## Send sensor data
+
+```js
+mms.sendData({
+	"messageType": "<messageTypeId>",
+	"messages": [{
+      "sensor1": "Value 1",
+      "sensor2": "Value 2"
+    }]
+	})
+	.catch(function(error) {
+		console.log(error.message)
+	});
