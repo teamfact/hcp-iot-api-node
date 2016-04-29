@@ -7,14 +7,14 @@ Lightweight node.js based wrapper for the SAP HANA Cloud Platform IoT Services A
 
 ## Authentication
 
-´´´javascript
+```js
 var API = require("hcp-iot-api");
 var rdms = new API.RemoteDeviceManagementService("<user>", "<password>");
-´´´
+```
 
 ## Reading data
 
-´´´javascript
+```js
 rdms.getMessageTypes()
   .then(function(messageTypes) {
 		// Do something meaningful
@@ -22,6 +22,6 @@ rdms.getMessageTypes()
 	.catch(function(error) {
 		console.log(error.message)
 	});
-´´´
+```
 
 # Message Management Service (MMS)
