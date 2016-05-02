@@ -44,7 +44,7 @@ rdms.createDeviceType({...}
 	 catch(function(error) { console.log(error) });
 ```
 
-More on Promises can be found [here](https://promise-nuggets.github.io/);
+More on Promises can be found [here](https://promise-nuggets.github.io/).
 
 ## Remote Device Management Service (RDMS)
 
@@ -58,9 +58,9 @@ The RDMS always needs the users username and password for authentication.
 var API = require("hcp-iot-api");
 var rdms = new API.RemoteDeviceManagementService("<user>", "<password>");
 ```
-### Reading data
+### Reading data and posting data
 
-The API allows to read data from service.
+The API allows to read all kinds of data from service.
 
 ```js
 rdms.getMessageTypes()
@@ -68,9 +68,15 @@ rdms.getMessageTypes()
 		// Do something meaningful
 	})
 	.catch(function(error) { console.log(error.message)	});
-```
 
-## Posting data
+```
+It's also possible to create entities by using the various `create` functions.
+Please keep in mind, that there is a fixed order, how to create obects:
+
+1. Create device type
+2. Create message type
+3. Register device
+4. Assign device to hierarchy (if required)
 
 ```js
 rdms.createDeviceType({ "name": "Device Type 1" })
