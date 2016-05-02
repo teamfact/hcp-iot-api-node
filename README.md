@@ -5,7 +5,7 @@ Instead of wrangling with authentication and request configuration, you can use 
 Both services (Remote Device Management Servcie and Message Management Service) have been implemented in their own class and own set of methods (see documentation below).
 There is also a utility class available to request OAuth tokens for configured HCP clients.
 
-## Installation
+## Installation (when available)
 
 You can install the module through the public npm registry by running the
 following command in CLI:
@@ -32,7 +32,7 @@ rdms.createDeviceType({...} , function (deviceType) {
 Because all methods return Promises, it is much easer to deal with sychronous requests, avoid handling errors multiple times and keep everything more readable. So the API actually looks like this:
 
 ```js
-rdms.createDeviceType({...}
+rdms.createDeviceType({...})
 	 .then(function(deviceType){
 		 return rdms.createMessageType({...});
 	 })
@@ -113,7 +113,7 @@ You can pass in all the required information in the constructor or use the sette
 
 ## Send sensor data
 
-The main purpuse of the MMS is to send sensor data from the device into the HCP. The API is very straight forward. The following statement sends the data via HTTP(S) connection.
+The main purpose of the MMS is to send sensor data from the device into the HCP. The API is very straight forward. The following statement sends the data via HTTP(S) connection.
 
 ```js
 mms.sendData({
