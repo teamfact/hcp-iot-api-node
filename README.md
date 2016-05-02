@@ -68,7 +68,7 @@ mms.sendData({
 	.catch(function(error) {
 		console.log(error.message)
 	});
-	
+```	
 	
 # Full documentation
 
