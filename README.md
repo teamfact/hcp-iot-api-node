@@ -1,12 +1,10 @@
 # HANA Cloud Platform IoT Services API (hcp-iot-api)
 
-This is a lightweight node.js based wrapper for the SAP HANA Cloud Platform IoT Services API. 
-Instead of hasseling with authentication and request configuration, you can use the available methods to communicate with the API.
-Both services (Remote Device Management Servcie and Message Management Service) have been implemented in their own class.
+This is a lightweight node.js based wrapper for the [SAP HANA Cloud Platform IoT Services API](https://help.hana.ondemand.com/iot/frameset.htm?ad829c660e584c329200022332f04d00.html). 
+Instead of wrangling with authentication and request configuration, you can use the libraries methods to communicate with the API.
+Both services (Remote Device Management Servcie and Message Management Service) have been implemented in their own class and own set of methods (see documentation below).
 
-**Currently work in progress**
-
-## Installation (when available)
+## Installation
 
 You can install the module through the public npm registry by running the
 following command in CLI:
@@ -18,6 +16,34 @@ npm install --save hcp-iot-api
 ## Promises
 
 The library is using Promises for a cleaner syntax and to avoid nested callbacks.
+So when there is the need to have things be done sequentially, you would normally have to write nested callbacks like this in JavaScript:
+
+```js
+// This is how the API would look without promises
+rdms.createDeviceType({...} , function (deviceType) {
+	rdms.createMessageType({...}, function(messageType) {		
+		rdms.registerDevice({...}, function(device) {
+			...
+		}, function(error) { console.log(error); });
+	}, function(error) { console.log(error); });
+}, function(error) { console.log(error); });
+```
+Because all methods return Promises, it is much easer to deal with sychronous requests and keep everything more readable.
+Instead 
+
+```js
+rdms.createDeviceType({...}
+	 .done(function(deviceType){
+		 return rdms.createMessageType({...});
+	 })
+	 .done(function(messageType){
+		 return rdms.registerDevice({...});
+	 }).
+	 .done(function(device){
+		 ...
+	 }).
+	 catch(function(error) { console.log(error) });
+```
 
 ## Remote Device Management Service (RDMS)
 
