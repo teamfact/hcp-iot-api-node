@@ -32,13 +32,13 @@ Because all methods return Promises, it is much easer to deal with sychronous re
 
 ```js
 rdms.createDeviceType({...}
-	 .done(function(deviceType){
+	 .then(function(deviceType){
 		 return rdms.createMessageType({...});
 	 })
-	 .done(function(messageType){
+	 .then(function(messageType){
 		 return rdms.registerDevice({...});
 	 }).
-	 .done(function(device){
+	 .then(function(device){
 		 ...
 	 }).
 	 catch(function(error) { console.log(error) });
@@ -56,7 +56,10 @@ The RDMS always needs the users username and password for authentication.
 
 ```js
 var API = require("hcp-iot-api");
-var rdms = new API.RemoteDeviceManagementService("<user>", "<password>");
+var rdms = new API.RemoteDeviceManagementService({
+	"user: ""<user>", 
+	"password": "<password>"
+});
 ```
 ### Reading data and posting data
 
@@ -89,6 +92,23 @@ rdms.createDeviceType({ "name": "Device Type 1" })
 ```
 
 # Message Management Service (MMS)
+
+The [Message Management Service](https://help.hana.ondemand.com/iot/frameset.htm?7c71e35a19284736a806fb25a19dde41.html) can be used to send data from the IoT device into the Hana Cloud Platform and/or back to the device. 
+
+### Setup
+
+The MMS acutally is a bit more complex in terms of authorization. There are several methods, which are bound to a specific device. For exampe, if you want to send sensor data from a device into the HCP (`mms.sendData(...)`), you need the `deviceId` and `deviceToken` information. If the device was being registered via RDMS programatically, it is highly importend to store the returned deviceToken, as this is no more readable afterwards.
+Other methods require a user authentication (e.g. `mms.pushToDevice(...)`). 
+
+```js
+var API = require("hcp-iot-api");
+var mms = new HCPIoTAPI.MessageManagementService({
+	"user": "<username>",
+	"password": "<password>",
+	"deviceToken": "<deviceToken>",
+	"deviceId": "<deviceId>",
+	"userToken": "<userToken>",		
+});
 
 ## Send sensor data
 
