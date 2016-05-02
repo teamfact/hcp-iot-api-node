@@ -28,8 +28,7 @@ rdms.createDeviceType({...} , function (deviceType) {
 	}, function(error) { console.log(error); });
 }, function(error) { console.log(error); });
 ```
-Because all methods return Promises, it is much easer to deal with sychronous requests and keep everything more readable.
-Instead 
+Because all methods return Promises, it is much easer to deal with sychronous requests, avoid handling errors multipe time and keep everything more readable. So the API actually looks like this:
 
 ```js
 rdms.createDeviceType({...}
@@ -45,26 +44,30 @@ rdms.createDeviceType({...}
 	 catch(function(error) { console.log(error) });
 ```
 
+More on Promises can be found [here](https://promise-nuggets.github.io/);
+
 ## Remote Device Management Service (RDMS)
 
+The [Remote Device Management Service](https://help.hana.ondemand.com/iot/frameset.htm?c4477ad35f1c405fb9364f279f24d973.html) is used to programatically administrate devices, device types, message types, etc.
 
-### Authentication
+### Setup
+
+The RDMS always needs the users username and password for authentication.
 
 ```js
 var API = require("hcp-iot-api");
 var rdms = new API.RemoteDeviceManagementService("<user>", "<password>");
 ```
-
 ### Reading data
+
+The API allows to read data from service.
 
 ```js
 rdms.getMessageTypes()
 	.then(function(messageTypes) {
 		// Do something meaningful
 	})
-	.catch(function(error) {
-		console.log(error.message)
-	});
+	.catch(function(error) { console.log(error.message)	});
 ```
 
 ## Posting data
