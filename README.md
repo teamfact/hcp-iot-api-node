@@ -3,6 +3,7 @@
 This is a lightweight node.js based wrapper for the [SAP HANA Cloud Platform IoT Services API](https://help.hana.ondemand.com/iot/frameset.htm?ad829c660e584c329200022332f04d00.html). 
 Instead of wrangling with authentication and request configuration, you can use the libraries methods to communicate with the API.
 Both services (Remote Device Management Servcie and Message Management Service) have been implemented in their own class and own set of methods (see documentation below).
+There is also a utility class available to request OAuth tokens for configured HCP clients.
 
 ## Installation
 
@@ -57,7 +58,7 @@ The RDMS always needs the users HCP username and password for authentication.
 ```js
 var API = require("hcp-iot-api");
 var rdms = new API.RemoteDeviceManagementService({
-	"account: ""<user>", 
+	"account": "<user>", 
 	"password": "<password>"
 });
 ```
@@ -99,12 +100,12 @@ Other methods require a user authentication (e.g. `mms.pushToDevice(...)`).
 
 ```js
 var API = require("hcp-iot-api");
-var mms = new HCPIoTAPI.MessageManagementService({
-	"user": "<username>",
+var mms = new API.MessageManagementService({
+	"account": "<username>",
 	"password": "<password>",
 	"deviceToken": "<deviceToken>",
 	"deviceId": "<deviceId>",
-	"userToken": "<userToken>",		
+	"userToken": "<userToken>"
 });
 ```	
 
