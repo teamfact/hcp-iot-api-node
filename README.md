@@ -28,7 +28,7 @@ rdms.createDeviceType({...} , function (deviceType) {
 	}, function(error) { console.log(error); });
 }, function(error) { console.log(error); });
 ```
-Because all methods return Promises, it is much easer to deal with sychronous requests, avoid handling errors multipe time and keep everything more readable. So the API actually looks like this:
+Because all methods return Promises, it is much easer to deal with sychronous requests, avoid handling errors multiple times and keep everything more readable. So the API actually looks like this:
 
 ```js
 rdms.createDeviceType({...}
@@ -52,19 +52,20 @@ The [Remote Device Management Service](https://help.hana.ondemand.com/iot/frames
 
 ### Setup
 
-The RDMS always needs the users username and password for authentication.
+The RDMS always needs the users HCP username and password for authentication.
 
 ```js
 var API = require("hcp-iot-api");
 var rdms = new API.RemoteDeviceManagementService({
-	"user: ""<user>", 
+	"account: ""<user>", 
 	"password": "<password>"
 });
 ```
 ### Reading data and posting data
 
-The API allows to read all kinds of data from service.
+The API allows to read all kinds of data from service. It's actually possible to completly configure the IoT service without accessing the GUI.
 
+A simple example getting all message types. The return values are captured and accessiable in the `then` functions.
 ```js
 rdms.getMessageTypes()
 	.then(function(messageTypes) {
@@ -73,22 +74,18 @@ rdms.getMessageTypes()
 	.catch(function(error) { console.log(error.message)	});
 
 ```
-It's also possible to create entities by using the various `create` functions.
-Please keep in mind, that there is a fixed order, how to create obects:
-
-1. Create device type
-2. Create message type
-3. Register device
-4. Assign device to hierarchy (if required)
+It's also possible to create entities by using the various `create` functions. The available fields can be read in the [official documentation](https://help.hana.ondemand.com/iot/frameset.htm?ad829c660e584c329200022332f04d00.html). Please keep in mind, that a device type needs to be created first and its deviceToken saved, as it won't be accessible via API when using `rdms.getDeviceType(id)`.
 
 ```js
 rdms.createDeviceType({ "name": "Device Type 1" })
 	.then(function (deviceType) {
-		// Store token for later usage
+		// Store token to register devices later
 		var deviceTypeToken = deviceType.token;
-	.catch(function(error) {
-		console.log(error.message)
-	});
+	
+		return rdms.createMessageType({'device_type': deviceType.id, ...});
+	.then(function (messageType) {
+		...
+	.catch(function(error) { console.log(error.message)	});
 ```
 
 # Message Management Service (MMS)
@@ -109,8 +106,13 @@ var mms = new HCPIoTAPI.MessageManagementService({
 	"deviceId": "<deviceId>",
 	"userToken": "<userToken>",		
 });
+```	
+
+You can pass in all the required information in the constructor or use the setter methods later on.
 
 ## Send sensor data
+
+The main purpuse of the MMS is to send sensor data from the device into the HCP. The API is very straight forward. The following statement sends the data via HTTP(S) connection.
 
 ```js
 mms.sendData({
@@ -120,31 +122,41 @@ mms.sendData({
       "sensor2": "Value 2"
     }]
 	})
-	.catch(function(error) {
-		console.log(error.message)
-	});
+	.catch(function(error) { console.log(error.message)	});
 ```	
 	
 # Full documentation
+
+The following section describes the full API.
 
 ## Class: RemoteDeviceManagementService
 
 ### new API.RemoteDeviceManagementService([options])
 
 * `options` Object
-  * `host` String
-  * `path` String
-	* `account` String
-	* `password` String
+  * `account` String
+  * `password` String
 
-Construct a new rdms object.
-
+Construct a new rdms object. `account` and `password` need to be set for HTTP authentication.
 
 ### rdms.createDeviceType(options)
 
-Construct a new rdms object.
-For a list of opions see https://help.hana.ondemand.com/iot/frameset.htm?44c28d07999b47d382ff5ef3a742124a.html.
+* `options` Object – For a list of opions check out the [official docs](https://help.hana.ondemand.com/iot/frameset.htm?44c28d07999b47d382ff5ef3a742124a.html).
+
+Creates a new device type.
 
 ### rdms.getDeviceTypes()
+
+Returns all device types.
+
 ### rdms.getDeviceType(id)
+
+* `id` String
+
+Returns one specific device type.
+
 ### rdms.deleteDeviceType(id)
+
+* `id` String
+
+Deletes the device type.
