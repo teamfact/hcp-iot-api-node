@@ -2,7 +2,8 @@
 
 This is a lightweight node.js based wrapper for the [SAP HANA Cloud Platform IoT Services API](https://help.hana.ondemand.com/iot/frameset.htm?ad829c660e584c329200022332f04d00.html). 
 Instead of wrangling with authentication and request configuration, you can use the libraries methods to communicate with the API.
-Both services (Remote Device Management Servcie and Message Management Service) have been implemented in their own class and own set of methods (see documentation below).
+Both services (Remote Device Management Servcie and Message Management Service) have been implemented in their own class (see documentation below).
+
 There is also a utility class available to request OAuth tokens for configured HCP clients.
 
 ## Installation (when available)
@@ -62,7 +63,7 @@ var rdms = new API.RemoteDeviceManagementService({
 	"password": "<password>"
 });
 ```
-### Reading data and posting data
+### Reading and posting data
 
 The API allows to read all kinds of data from service. It's actually possible to completly configure the IoT service without accessing the GUI.
 
@@ -142,9 +143,19 @@ Construct a new rdms object. `account` and `password` need to be set for HTTP au
 
 ### rdms.createDeviceType(options)
 
-* `options` Object – For a list of opions check out the [official docs](https://help.hana.ondemand.com/iot/frameset.htm?44c28d07999b47d382ff5ef3a742124a.html).
+* `options` Object – For a list of options check out the [official docs](https://help.hana.ondemand.com/iot/frameset.htm?44c28d07999b47d382ff5ef3a742124a.html).
 
-Creates a new device type.
+Creates a new device type. Please note, that for registering devices via API you need the device types token.
+This should be stored somewhere in your app.
+
+```js
+rdms.createDeviceType({ "name": "Device Type 1" })
+	.then(function (deviceType) {
+		// Store token to register devices later
+		var deviceTypeToken = deviceType.token;
+  })
+	.catch(function(error) { console.log(error.message)	});
+```
 
 ### rdms.getDeviceTypes()
 
