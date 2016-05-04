@@ -285,4 +285,24 @@ Returns one specific device.
 
 Deletes the device.
 
+### rdms.getDeviceAttributes(id)
+
+* `id` String
+
+Returns all attributes for a  device.
+
+### rdms.createDeviceAttribute(id, options)
+
+* `id` String – The id of the device
+* `options` Object – For all options please see [official docs](https://help.hana.ondemand.com/iot/frameset.htm?2e2fe26905c247668f1e61360846ce53.html)
+
+Creates a specific attribute for a device.
+
+### rdms.deleteDeviceAttribute(id, key)
+
+* `id` String
+* `key` String
+
+Deletes a specific attribute of a device.
+
 - - - -
