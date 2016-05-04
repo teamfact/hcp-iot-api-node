@@ -145,21 +145,31 @@ Construct a new rdms object. `account` and `password` need to be set for HTTP au
 
 * `options` Object – For a list of options check out the [official docs](https://help.hana.ondemand.com/iot/frameset.htm?44c28d07999b47d382ff5ef3a742124a.html).
 
-Creates a new device type. Please note, that for registering devices via API you need the device types token.
-This should be stored somewhere in your app.
+Creates a new device type. Please note, that for registering devices via API you need the device types token. This should be stored somewhere in your app, as it won't be accessible via API when using `rdms.getDeviceType(id)`.
 
+Example:
 ```js
 rdms.createDeviceType({ "name": "Device Type 1" })
-	.then(function (deviceType) {
-		// Store token to register devices later
-		var deviceTypeToken = deviceType.token;
+  .then(function (deviceType) {
+    // Store token to register devices later
+    var deviceTypeToken = deviceType.token;
   })
-	.catch(function(error) { console.log(error.message)	});
+  .catch(function(error) { console.log(error.message)	});
 ```
 
 ### rdms.getDeviceTypes()
 
-Returns all device types.
+Returns all existing device types.
+
+Example:
+```js
+rdms.getDeviceTypes()
+  .then(function (deviceTypes) {
+    ...
+  })
+  .catch(function(error) { console.log(error.message)	});
+```
+
 
 ### rdms.getDeviceType(id)
 
