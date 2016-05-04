@@ -141,6 +141,8 @@ The following section describes the full API.
 
 Construct a new rdms object. `account` and `password` need to be set for HTTP authentication.
 
+- - - -
+
 ### rdms.createDeviceType(options)
 
 * `options` Object – For a list of options check out the [official docs](https://help.hana.ondemand.com/iot/frameset.htm?44c28d07999b47d382ff5ef3a742124a.html).
@@ -180,5 +182,51 @@ Returns one specific device type.
 * `id` String
 
 Deletes the device type.
+
+- - - -
+
+### rdms.createMessageType(options)
+
+* `options` Object – For a list of options check out the [official docs](https://help.hana.ondemand.com/iot/frameset.htm?a7dbcb07bdac466db03168f37719f81a.html).
+
+Creates a new message type. A message type is always bound to a specific device type and needs the `direction` set to either `fromDevice` or `toDevice`.
+
+Example:
+```js
+rdms.createMessageType({
+    "device_type": deviceType.id, 
+    "name": "Message Type 1",
+    "direction": "fromDevice",
+    "fields": [
+       {
+          "position": 1, 
+          "name": "sensor1",
+          "type": "string"
+       },
+       {
+          "position": 2,
+          "name": "sensor2",
+          "type": "string"
+       }
+    ]
+  }); 
+  .catch(function(error) { console.log(error.message) });
+```
+
+### rdms.getMessageTypes()
+
+Returns all existing message types.
+
+### rdms.getMessageType(id)
+
+* `id` String
+
+Returns one specific message type.
+
+### rdms.deleteMessageType(id)
+
+* `id` String
+
+Deletes the message type.
 
 - - - -
