@@ -1,6 +1,6 @@
 # HANA Cloud Platform IoT Services API (hcp-iot-api)
 
-This is a lightweight node.js based wrapper for the [SAP HANA Cloud Platform IoT Services API](https://help.hana.ondemand.com/iot/frameset.htm?ad829c660e584c329200022332f04d00.html). 
+This is a lightweight Node.js based wrapper for the [SAP HANA Cloud Platform IoT Services API](https://help.hana.ondemand.com/iot/frameset.htm?ad829c660e584c329200022332f04d00.html). 
 Instead of wrangling with authentication and request configuration, you can use the libraries methods to communicate with the API.
 Both services (Remote Device Management Servcie and Message Management Service) have been implemented in their own class (see documentation below).
 
@@ -30,7 +30,7 @@ rdms.createDeviceType({...} , function (deviceType) {
 	}, function(error) { console.log(error); });
 }, function(error) { console.log(error); });
 ```
-Because all methods return Promises, it is much easer to deal with sychronous requests, avoid handling errors multiple times and keep everything more readable. So the API actually looks like this:
+Because the libraries methods return Promises, it is much easer to deal with sychronous requests, avoid handling errors multiple times and keep everything more readable. So the API actually looks like this:
 
 ```js
 rdms.createDeviceType({...})
@@ -65,9 +65,9 @@ var rdms = new API.RemoteDeviceManagementService({
 ```
 ### Reading and posting data
 
-The API allows to read all kinds of data from service. It's actually possible to completly configure the IoT service without accessing the GUI.
+The API allows to completly configure the HCP IoT services without accessing the GUI.
 
-A simple example getting all message types. The return values are captured and accessiable in the `then` functions.
+A simple example getting all message types. 
 ```js
 rdms.getMessageTypes()
 	.then(function(messageTypes) {
@@ -76,14 +76,13 @@ rdms.getMessageTypes()
 	.catch(function(error) { console.log(error.message)	});
 
 ```
-It's also possible to create entities by using the various `create` functions. The available fields can be read in the [official documentation](https://help.hana.ondemand.com/iot/frameset.htm?ad829c660e584c329200022332f04d00.html). Please keep in mind, that a device type needs to be created first and its deviceToken saved, as it won't be accessible via API when using `rdms.getDeviceType(id)`.
+It's also possible to create entities by using the various `create` functions. The available fields can be read in the [official documentation](https://help.hana.ondemand.com/iot/frameset.htm?ad829c660e584c329200022332f04d00.html).
 
 ```js
 rdms.createDeviceType({ "name": "Device Type 1" })
 	.then(function (deviceType) {
-		// Store token to register devices later
-		var deviceTypeToken = deviceType.token;
-	
+    
+    // Then create a message type for the device type
 		return rdms.createMessageType({'device_type': deviceType.id, ...});
 	.then(function (messageType) {
 		...
@@ -126,6 +125,9 @@ mms.sendData({
 	})
 	.catch(function(error) { console.log(error.message) });
 ```	
+
+- - - -
+- - - -
 	
 # Full documentation
 
@@ -140,6 +142,15 @@ The following section describes the full API.
   * `password` String
 
 Construct a new rdms object. `account` and `password` need to be set for HTTP authentication.
+
+Example:
+```js
+var API = require("hcp-iot-api");
+var rdms = new API.RemoteDeviceManagementService({
+	"account": "<user>", 
+	"password": "<password>"
+});
+```
 
 - - - -
 
@@ -294,7 +305,7 @@ Returns all attributes for a  device.
 ### rdms.createDeviceAttribute(id, options)
 
 * `id` String – The id of the device
-* `options` Object – For all options please see [official docs](https://help.hana.ondemand.com/iot/frameset.htm?2e2fe26905c247668f1e61360846ce53.html)
+* `options` Object – For all options please check out the [official docs](https://help.hana.ondemand.com/iot/frameset.htm?2e2fe26905c247668f1e61360846ce53.html)
 
 Creates a specific attribute for a device.
 
@@ -306,3 +317,7 @@ Creates a specific attribute for a device.
 Deletes a specific attribute of a device.
 
 - - - -
+
+### rdms.getSettings()
+
+Returns the RDMS settings. For more information please check out the [official docs](https://help.hana.ondemand.com/iot/frameset.htm?0ec86a1dab0245ddbf4f40b66f6751fd.html)
