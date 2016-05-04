@@ -230,3 +230,59 @@ Returns one specific message type.
 Deletes the message type.
 
 - - - -
+
+### rdms.registerDevice(options, deviceTypeToken)
+
+* `options` Object – For a list of options check out the [official docs](https://help.hana.ondemand.com/iot/frameset.htm?2e2fe26905c247668f1e61360846ce53.html).
+* `deviceTypeToken` String – The token from the device type
+
+Registers a new device. A device is always bound to a specific device type. A device can be created using the `registerDevice` or `createDevice` method. The latter one does not return the OAuth-token required to send data to the API via MMS. 
+The token itself can be read and recreated via the IoT Cockpit.
+
+Example:
+```js
+rdms.registerDevice({
+  "name": "Device 1",
+  "device_type": device_type.id,
+  "attributes": [
+    { "key": "customKey1", "value": "custom value" },
+    { "key": "customKey2", "value": "custom value" }
+  ]}, deviceTypeToken); 
+  .catch(function(error) { console.log(error.message) });
+```
+
+### rdms.createDevice(options)
+
+* `options` Object – For a list of options check out the [official docs](https://help.hana.ondemand.com/iot/frameset.htm?2e2fe26905c247668f1e61360846ce53.html).
+
+Creates a new device. To use the device for sending data, you have to read the token from the IoT Cockpit.
+
+Example:
+```js
+rdms.createDevice({
+  "name": "Device 1",
+  "device_type": device_type.id,
+  "attributes": [
+    { "key": "customKey1", "value": "custom value" },
+    { "key": "customKey2", "value": "custom value" }
+  ]}); 
+  .catch(function(error) { console.log(error.message) });
+```
+
+### rdms.getDevices()
+
+Returns all existing deviced.
+
+### rdms.getDevice(id)
+
+* `id` String
+
+Returns one specific device.
+
+### rdms.deleteDevice(id)
+
+* `id` String
+
+Deletes the device.
+
+- - - -
