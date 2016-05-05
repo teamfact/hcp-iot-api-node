@@ -321,3 +321,50 @@ Deletes a specific attribute of a device.
 ### rdms.getSettings()
 
 Returns the RDMS settings. For more information please check out the [official docs](https://help.hana.ondemand.com/iot/frameset.htm?0ec86a1dab0245ddbf4f40b66f6751fd.html)
+
+- - - -
+
+## Class: MessageManagementService
+
+### new API.MessageManagementService([options])
+
+* `options` Object
+  * `account` String (mandatory)
+  * `password` String (optional)
+  * `deviceId` String (optional)  
+  * `deviceToken` String (optional)  
+
+Construct a new mms object. `account` and `password` need to be set for HTTP authentication.
+
+Example:
+```js
+var API = require("hcp-iot-api");
+var rdms = new API.MessageManagementService({
+	"account": "<user>", 
+	"deviceId": "<deviceId>",
+	"deviceToken": "<deviceToken>"
+});
+```
+
+- - - -
+
+### mms.sendData(options, deviceId, deviceToken)
+
+* `options` Object – For a list of options check out the [official docs](https://help.hana.ondemand.com/iot/frameset.htm?2e2fe26905c247668f1e61360846ce53.html).
+
+Send sensor data to the IoT Cockpit from a specific device.
+
+Example:
+```js
+mms.sendData({
+  "mode": "async",
+  "messageType": "<messageTypeId>",
+  "messages": [
+    {
+      "sensor1": "Value 1",
+      "sensor2": "Value 2"
+    }
+  ]
+  }); 
+  .catch(function(error) { console.log(error.message) });
+```
