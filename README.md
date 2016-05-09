@@ -17,8 +17,8 @@ npm install --save hcp-iot-api
 
 ## Promises
 
-The library is using Promises for a cleaner syntax and to avoid nested callbacks.
-So when there is the need to have things be done sequentially, you would normally have to write nested callbacks like this in JavaScript:
+The library is using promises for a cleaner syntax and to avoid nested callbacks.
+So when there is the need to have things be in sequence, you would normally have to write nested callbacks in JavaScript:
 
 ```js
 // This is how the API would look without promises
@@ -45,16 +45,17 @@ rdms.createDeviceType({...})
 	 }).
 	 catch(function(error) { console.log(error) });
 ```
-
-More on Promises can be found [here](https://promise-nuggets.github.io/).
+Every time you want something to run sync, just put the code in the `then` function and return the promise.
+More on promises can be found [here](https://promise-nuggets.github.io/).
 
 ## Remote Device Management Service (RDMS)
 
-The [Remote Device Management Service](https://help.hana.ondemand.com/iot/frameset.htm?c4477ad35f1c405fb9364f279f24d973.html) is used to programatically administrate devices, device types, message types, etc.
+The IoT Services Cockit inside HCP contains a user interface to manage devices, device types, message types, etc. The [Remote Device Management Service](https://help.hana.ondemand.com/iot/frameset.htm?c4477ad35f1c405fb9364f279f24d973.html) can be used to programatically do the administration without the need to access the cockpit.
+Especially in big projects it may be a good solution to store the definition of message types, etc. as code fragements in one central place with versioning support (e.g. git). 
 
 ### Setup
 
-The RDMS always needs the users HCP username and password for authentication.
+The RDMS always needs the users HCP username and password for authentication. This information needs to be given when initializing a new object.
 
 ```js
 var API = require("hcp-iot-api");
@@ -65,9 +66,8 @@ var rdms = new API.RemoteDeviceManagementService({
 ```
 ### Reading and posting data
 
-The API allows to completly configure the HCP IoT services without accessing the GUI.
-
-A simple example getting all message types. 
+The API allows to completly configure the HCP IoT services without the need to access a GUI. Instead, there are fuctions available to read out, create and delete all kinds of entity types.
+A simple example showing how to fetch all message types:
 ```js
 rdms.getMessageTypes()
 	.then(function(messageTypes) {
@@ -76,7 +76,7 @@ rdms.getMessageTypes()
 	.catch(function(error) { console.log(error.message)	});
 
 ```
-It's also possible to create entities by using the various `create` functions. The available fields can be read in the [official documentation](https://help.hana.ondemand.com/iot/frameset.htm?ad829c660e584c329200022332f04d00.html).
+And another one showing how to create a device type and after that, create a corresponding message type. The available fields can be read in the [official documentation](https://help.hana.ondemand.com/iot/frameset.htm?ad829c660e584c329200022332f04d00.html).
 
 ```js
 rdms.createDeviceType({ "name": "Device Type 1" })
@@ -351,6 +351,8 @@ var rdms = new API.MessageManagementService({
 ### mms.sendData(options, deviceId, deviceToken)
 
 * `options` Object – For a list of options check out the [official docs](https://help.hana.ondemand.com/iot/frameset.htm?2e2fe26905c247668f1e61360846ce53.html).
+* `deviceId` String (optional) – Has to be given if not set on global level  
+* `deviceToken` String (optional) – Has to be given if not set on global level    
 
 Send sensor data to the IoT Cockpit from a specific device.
 
