@@ -198,7 +198,7 @@ mms.getData("<deviceId>", "<deviceToken>")
 
 The MMS also allows a persistent connection to the API via websocket protocol. This should be used if a bidirectional communication is required. When using websockets, messages send to a device do not need to be pulled, but are pushed through the websocket connection.
 
-The following example shows how to establish a websocket connection and once this is established, send data into the HCP. The `sendData` method detects the open connection and will send the data over the connection instead of over HTTP(S).
+The following example shows how to establish a websocket connection and once this is established, send data into the HCP. The `sendData` method detects the open connection and will send the data over the connection instead of over HTTP(S). The `onWebsocketMessage` function registers a callback, which is being called whenever a message for the device arrives. Please note, that we are not using promises here, because this method may be called multiple times.
 ```js
 var mms = new API.MessageManagementService({
 	"account": "<account>", 
@@ -210,8 +210,7 @@ mms.openWebsocketConnection()
 .then(function() {
 	
 	// Register callback for when data is being pushed to the device
-	mms.onWebsocketMessage()
-	.then(function(message) {
+	mms.onWebsocketMessage(function(message) {
 		// Do something the message
 	});
 	
@@ -256,7 +255,7 @@ For a list of all existing options, there is a `mms.getConfig()` method availabl
 - - - -
 - - - -
 	
-# Full documentation
+# Full documentation (will be updated soon)
 
 The following section describes the full API.
 
