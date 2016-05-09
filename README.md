@@ -6,7 +6,7 @@ Both services (Remote Device Management Servcie and Message Management Service) 
 
 There is also a utility class available to request OAuth tokens for configured HCP clients.
 
-## Installation (when available)
+## Installation
 
 You can install the module through the public npm registry by running the
 following command in CLI:
