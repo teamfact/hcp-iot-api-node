@@ -201,31 +201,57 @@ The MMS also allows a persistent connection to the API via websocket protocol. T
 The following example shows how to establish a websocket connection and once this is established, send data into the HCP. The `sendData` method detects the open connection and will send the data over the connection instead of over HTTP(S).
 ```js
 var mms = new API.MessageManagementService({
-  "account": "<account>", 
-  "deviceId": "<deviceId>", 
-  "deviceToken": "<deviceToken>"
+	"account": "<account>", 
+	"deviceId": "<deviceId>", 
+	"deviceToken": "<deviceToken>"
 });
 
 mms.openWebsocketConnection()
 .then(function() {
-  
-  return mms.sendData({
-    "messageType": "<messageType>",
-    "messages": [
-      {
-        "sensor1": "Value 1",
-        "sensor2": "Value 2"
-      }
-    ]
-  });  
-  
-})
-.then(function(message) {
-  mms.closeWebsocketConnection();
+	
+	// Register callback for when data is being pushed to the device
+	mms.onWebsocketMessage()
+	.then(function(message) {
+		// Do something the message
+	});
+	
+  	// Send data through the websocket
+	mms.sendData({
+		"messageType": "<messageType>",
+		"messages": [{
+        		"sensor1": "Value 1",
+        		"sensor2": "Value 2"
+      		}]
+  	});  
 });
+
+
+// Close, when not required anymore
+mms.closeWebsocketConnection()
+.then(function() {
+	// Maybe do something when closed
+});;
 ```
 
 ## MMS configuration via API
+
+Since version 2.15.0 of the MMS, it is possible to set a wide range of options for configuration. This can be done either via GUI in the MMS Cockpit or via API. The following example shows, how you can tell the API to create all tables using the column instead of the row store. Authentication must be done either with `password` or `oauthToken`.
+
+```js 
+var mms = new API.MessageManagementService({
+	"account": "<account>", 
+	"password": "<password>"
+});
+
+mms.updateConfig({
+	"config": [
+		{ "key": "mms.processing.sql.hana.table_type", "value": "column" }
+	]
+}).catch(function(error) { console.log(error.message) });
+```
+ 
+Be aware, that in the official API documentation the configuration format is currently incorrect. So if you want to set settings programmatically, you have to explicitly use key and value like in the example shown above.
+For a list of all existing options, there is a `mms.getConfig()` method available, wich returns the whole configuration.
 
 - - - -
 - - - -
