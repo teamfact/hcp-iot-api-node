@@ -149,6 +149,12 @@ mms.sendData({
 	.catch(function(error) { console.log(error.message) });
 ```	
 
+## Sending information back to a device
+
+## Using websockets
+
+## MMS configuration via API
+
 - - - -
 - - - -
 	
@@ -228,8 +234,8 @@ Creates a new message type. A message type is always bound to a specific device 
 Example:
 ```js
 rdms.createMessageType({
-    "device_type": deviceType.id, 
-    "name": "Message Type 1",
+   "device_type": deviceType.id, 
+  "name": "Message Type 1",
     "direction": "fromDevice",
     "fields": [
        {
@@ -282,7 +288,7 @@ rdms.registerDevice({
     { "key": "customKey1", "value": "custom value" },
     { "key": "customKey2", "value": "custom value" }
   ]}, deviceTypeToken); 
-  .catch(function(error) { console.log(error.message) });
+.catch(function(error) { console.log(error.message) });
 ```
 
 ### rdms.createDevice(options)
@@ -299,8 +305,9 @@ rdms.createDevice({
   "attributes": [
     { "key": "customKey1", "value": "custom value" },
     { "key": "customKey2", "value": "custom value" }
-  ]}); 
-  .catch(function(error) { console.log(error.message) });
+  ]
+}); 
+.catch(function(error) { console.log(error.message) });
 ```
 
 ### rdms.getDevices()
@@ -390,6 +397,6 @@ mms.sendData({
       "sensor2": "Value 2"
     }
   ]
-  }); 
-  .catch(function(error) { console.log(error.message) });
+})
+.catch(function(error) { console.log(error.message) });
 ```
