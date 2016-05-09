@@ -66,7 +66,7 @@ var rdms = new API.RemoteDeviceManagementService({
 ```
 ### Reading and posting data
 
-The API allows to completly configure the HCP IoT services without the need to access a GUI. Instead, there are fuctions available to read, create and delete all kinds of entity types.
+The API allows to completly configure the HCP IoT services without the need to access a GUI. Instead there are fuctions available to read, create and delete all kinds of entity types.
 A simple example showing how to fetch all message types:
 ```js
 rdms.getMessageTypes()
@@ -106,7 +106,8 @@ rdms.registerDevice({
 });  
 ```
 
-When registering a device, the API returns the devices JSON object containing a `token`. This is only returned once directly after creation, so it is highly important to store it for later usage. When using the MMS to send sensor data from a device, this token needs to be passed in as the OAuth token.
+When registering a device, the API returns the devices JSON object containing a `token`. This is only returned once directly after creation, so it is important to store it for later usage. When using the MMS to send sensor data from a device, this token needs to be passed in as the OAuth token.
+If you do not store the token programatically, it can be reset in the IoT Cockpit.
 
 # Message Management Service (MMS)
 
@@ -114,8 +115,8 @@ The [Message Management Service](https://help.hana.ondemand.com/iot/frameset.htm
 
 ### Setup
 
-The MMS is a bit more complex in terms of authorization. There are several methods, which are bound to a specific device. For exampe, if you want to send sensor data from a device into the HCP (`mms.sendData(...)`), you need the `deviceId` and `deviceToken` information. If the device was being registered via RDMS programatically, it is highly importend to store the returned deviceToken as this is no more readable afterwards. Other methods (e.g. `mms.pushToDevice(...)`) require a user authentication via HTTP Basic auth (`account`/`password`) or OAuth (`oauthToken'). 
-The authentication information could be assigned in the constructor is when calling a method (see full API below). Passing all objects in front would look like this:
+The MMS is a bit more complex in terms of authorization. There are several methods, which are bound to a specific device. For exampe, if you want to send sensor data from a device into the HCP (`mms.sendData(...)`), you need the `deviceId` and `deviceToken` information. Other methods (e.g. `mms.pushToDevice(...)`) require a user authentication via HTTP Basic Auth (`account`/`password`) or OAuth (`oauthToken`). 
+The authentication information could be assigned in the constructor or when calling a method (see full API below). Passing all parameters in upfront would look like this:
 ```js
 var API = require("hcp-iot-api");
 var mms = new API.MessageManagementService({
@@ -142,7 +143,7 @@ mms.sendData({
 .catch(function(error) { console.log(error.message) });
 ```	
 
-If now `deviceId` and `deviceToken` have been included in the constructor, they can be passed to the `sendData` method as the second and third parameter:
+If the `deviceId` and `deviceToken` have not been included in the constructor, they can be passed to the `sendData` method as the second and third parameter:
 
 ```js
 var mms = new API.MessageManagementService({ "account": "<username>" });
@@ -159,6 +160,7 @@ mms.sendData({
 ## Sending information back to a device
 
 Using MMS it is also possible, to send information to a device. When sending the information, it ca be specified if the message should be delivered via HTTP or a Websocket connection. It is also required to register a message type with `direction` `ToDevice` and use this one, when sending the information. 
+Authentication for using the `pushToDevice` function is either via `password` or via `oauthToken`.
 
 ```js
 var mms = new API.MessageManagementService({
@@ -178,7 +180,7 @@ mms.pushToDevice("<deviceId>", {
 });
 ```
 
-If HTTP as the transport protocol, the message is being stored inside the HCP in table `T_IOT_HTTP_PUSH` and can be retrieved by polling via the `mms.getData()` method. 
+If HTTP as the transport protocol, the message is being stored inside the HCP in table `T_IOT_HTTP_PUSH` and can be retrieved by polling via the `mms.getData()` method. Again, if specificed in the constructor, the method parameters can be omitted.
 
 ```js
 var mms = new API.MessageManagementService({
@@ -188,11 +190,40 @@ var mms = new API.MessageManagementService({
 
 mms.getData("<deviceId>", "<deviceToken>")
 .then(function(messages) {
-	// Read the messages
+	// Fetch the existing messages for this device
 });
 ```
 
 ## Using websockets
+
+The MMS also allows a persistent connection to the API via websocket protocol. This should be used if a bidirectional communication is required. When using websockets, messages send to a device do not need to be pulled, but are pushed through the websocket connection.
+
+The following example shows how to establish a websocket connection and once this is established, send data into the HCP. The `sendData` method detects the open connection and will send the data over the connection instead of over HTTP(S).
+```js
+var mms = new API.MessageManagementService({
+  "account": "<account>", 
+  "deviceId": "<deviceId>", 
+  "deviceToken": "<deviceToken>"
+});
+
+mms.openWebsocketConnection()
+.then(function() {
+  
+  return mms.sendData({
+    "messageType": "<messageType>",
+    "messages": [
+      {
+        "sensor1": "Value 1",
+        "sensor2": "Value 2"
+      }
+    ]
+  });  
+  
+})
+.then(function(message) {
+  mms.closeWebsocketConnection();
+});
+```
 
 ## MMS configuration via API
 
